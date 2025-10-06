@@ -32,6 +32,13 @@ async def create_profile(
     try:
         payload = jwt_manager.decode_access_token(token)
         token_user_id = payload.get("user_id")
+
+        if not token_user_id or not isinstance(token_user_id, int):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or missing user_id in token."
+            )
+
     except TokenExpiredError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
